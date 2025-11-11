@@ -151,7 +151,9 @@ class XGBoostModel:
         """Calculate feature importance"""
         importance = self.model.feature_importances_
         feature_names = X.columns.tolist() if hasattr(X, 'columns') else [f'feature_{i}' for i in range(X.shape[1])]
-        return dict(zip(feature_names, importance))
+        # Ensure native Python floats (not numpy types) so tests that check isinstance(..., (int,float)) pass
+        importance_list = [float(x) for x in importance]
+        return dict(zip(feature_names, importance_list))
     
     def save_model(self, filepath: str) -> None:
         """Save model to file"""
