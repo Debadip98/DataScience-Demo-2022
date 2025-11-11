@@ -1,6 +1,6 @@
-# XGBoost ML Model - End-to-End Project
+# KU Cancer Prediction App - Medical AI Diagnosis
 
-A **production-ready** machine learning project featuring **XGBoost** for classification with a complete CI/CD pipeline, attractive web dashboard, comprehensive testing, and Docker containerization.
+A **production-ready** cancer prediction application featuring **XGBoost** machine learning model with a complete CI/CD pipeline, attractive web dashboard, comprehensive testing, and Docker containerization.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.0-green?style=flat-square&logo=flask)
@@ -12,14 +12,14 @@ A **production-ready** machine learning project featuring **XGBoost** for classi
 
 ## 🎯 Project Overview
 
-This project demonstrates a **complete end-to-end machine learning workflow** with:
+This project demonstrates a **complete end-to-end cancer prediction system** with:
 
-✅ **ML Model** - XGBoost classification with comprehensive testing  
-✅ **Web API** - Flask REST API for model serving  
-✅ **Interactive Dashboard** - Modern, responsive UI with real-time predictions  
-✅ **CI/CD Pipeline** - GitHub Actions with automated testing & deployment  
-✅ **Containerization** - Docker & Docker Compose for easy deployment  
-✅ **Production Ready** - Security, logging, health checks, rate limiting  
+✅ **ML Model** - XGBoost classification for medical diagnosis
+✅ **Web API** - Flask REST API for model serving
+✅ **Interactive Dashboard** - Modern, responsive UI with real-time predictions
+✅ **CI/CD Pipeline** - GitHub Actions with automated testing & deployment
+✅ **Containerization** - Docker & Docker Compose for easy deployment
+✅ **Production Ready** - Security, logging, health checks, medical-grade validation  
 
 ---
 

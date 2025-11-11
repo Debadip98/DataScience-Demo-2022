@@ -1,5 +1,5 @@
 """
-Flask application for XGBoost ML model serving
+Flask application for KU Cancer Prediction Model serving
 """
 import os
 import json
@@ -322,7 +322,7 @@ def bad_request(error):
 
 def init_app():
     """Initialize the application"""
-    logger.info("Initializing XGBoost ML Flask App...")
+    logger.info("Initializing KU Cancer Prediction Flask App...")
     
     # Load or create model
     if not load_model():

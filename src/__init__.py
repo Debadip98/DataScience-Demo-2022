@@ -1,1 +1,1 @@
-"""XGBoost ML Project - Source Module"""
+"""KU Cancer Prediction App - Source Module"""
