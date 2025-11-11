@@ -128,15 +128,15 @@ async function handlePredictionSubmit(e) {
         }
 
         // Show loading
-        document.getElementById('resultContainer').innerHTML = '<div class="loading-spinner"><span>Making prediction...</span></div>';
-        document.getElementById('resultContent').style.display = 'none';
+        document.getElementById('resultContainer').innerHTML = '<div class="loading-spinner"><span>Analyzing and generating diagnosis...</span></div>';
+        document.getElementById('resultContent').style.display = 'block';
 
-        // Get prediction
+        // Get prediction with LLM diagnosis
         const result = await predict(features);
 
-        // Update display
+        // Update display with diagnosis insights
         updatePredictionResult(result);
-        showNotification('Prediction successful!', 'success');
+        showNotification('Diagnosis complete!', 'success');
 
     } catch (error) {
         console.error('Prediction error:', error);

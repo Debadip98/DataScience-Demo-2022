@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data_loader import DataLoader
 from src.model import XGBoostModel
 from src.utils import generate_synthetic_data
+from src.llm_diagnosis import get_llm_analyzer
 
 # Global model instance
 model = None
@@ -151,7 +152,7 @@ def model_info():
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
-    """Make prediction on input data"""
+    """Make prediction on input data with LLM diagnosis"""
     if model is None or not model.is_trained:
         return jsonify({'error': 'Model not ready'}), 500
     
@@ -167,8 +168,10 @@ def predict():
         features = data.get('features')
         if isinstance(features, list):
             X = pd.DataFrame([features], columns=[f'feature_{i}' for i in range(len(features))])
+            features_dict = {f'feature_{i}': float(v) for i, v in enumerate(features)}
         else:
             X = pd.DataFrame([features])
+            features_dict = {k: float(v) for k, v in features.items()}
         
         # Scale features if needed
         if data_loader and hasattr(data_loader, 'scaler'):
@@ -179,13 +182,26 @@ def predict():
         prediction = model.predict(X)[0]
         probabilities = model.predict_proba(X)[0].tolist()
         
+        # Get feature importance
+        feature_importance = model.get_feature_importance()
+        
+        # Generate LLM diagnosis insights
+        llm_analyzer = get_llm_analyzer()
+        diagnosis_report = llm_analyzer.generate_diagnosis_report(
+            features=features_dict,
+            prediction=int(prediction),
+            confidence=float(max(probabilities)),
+            feature_importance=feature_importance
+        )
+        
         result = {
             'prediction': int(prediction),
             'probabilities': {
                 'class_0': float(probabilities[0]),
                 'class_1': float(probabilities[1])
             },
-            'confidence': float(max(probabilities))
+            'confidence': float(max(probabilities)),
+            'diagnosis_insights': diagnosis_report
         }
         
         return jsonify(result), 200
@@ -285,6 +301,60 @@ def get_metrics():
     
     except Exception as e:
         logger.error(f"Metrics error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/diagnosis', methods=['POST'])
+def get_diagnosis():
+    """Get LLM-powered diagnosis analysis"""
+    if model is None or not model.is_trained:
+        return jsonify({'error': 'Model not ready'}), 500
+    
+    try:
+        data = request.get_json()
+        
+        # Validate input
+        valid, message = validate_prediction_data(data)
+        if not valid:
+            return jsonify({'error': message}), 400
+        
+        # Prepare data
+        features = data.get('features')
+        if isinstance(features, list):
+            features_dict = {f'feature_{i}': float(v) for i, v in enumerate(features)}
+            X = pd.DataFrame([features], columns=[f'feature_{i}' for i in range(len(features))])
+        else:
+            features_dict = {k: float(v) for k, v in features.items()}
+            X = pd.DataFrame([features_dict])
+        
+        # Scale features if needed
+        if data_loader and hasattr(data_loader, 'scaler'):
+            X_scaled = data_loader.scaler.transform(X)
+            X = pd.DataFrame(X_scaled, columns=X.columns)
+        
+        # Make prediction
+        prediction = model.predict(X)[0]
+        probabilities = model.predict_proba(X)[0].tolist()
+        
+        # Get feature importance
+        feature_importance = model.get_feature_importance()
+        
+        # Generate LLM diagnosis
+        llm_analyzer = get_llm_analyzer()
+        diagnosis_report = llm_analyzer.generate_diagnosis_report(
+            features=features_dict,
+            prediction=int(prediction),
+            confidence=float(max(probabilities)),
+            feature_importance=feature_importance
+        )
+        
+        return jsonify({
+            'prediction': int(prediction),
+            'confidence': float(max(probabilities)),
+            'diagnosis': diagnosis_report
+        }), 200
+    
+    except Exception as e:
+        logger.error(f"Diagnosis error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 # ============================================================================

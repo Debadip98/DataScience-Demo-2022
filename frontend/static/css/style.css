@@ -1094,3 +1094,310 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* ============================================================================
+   LLM DIAGNOSIS STYLES
+   ============================================================================ */
+
+.result-container {
+    background: white;
+    border-radius: 12px;
+    padding: var(--spacing-xl);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: var(--spacing-xl);
+}
+
+.result-container.cancer-positive {
+    border-left: 5px solid var(--danger);
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.05), white);
+}
+
+.result-container.cancer-negative {
+    border-left: 5px solid var(--success);
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.05), white);
+}
+
+.result-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.result-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.result-section h3 {
+    color: var(--dark);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+}
+
+/* Prediction Summary */
+.prediction-summary {
+    text-align: center;
+}
+
+.prediction-badge {
+    display: inline-block;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 8px;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+    color: white;
+}
+
+.prediction-badge.cancer-positive {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+}
+
+.prediction-badge.cancer-negative {
+    background: linear-gradient(135deg, var(--success), #059669);
+}
+
+.prediction-details {
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--gray-100);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.detail-row .value {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+}
+
+.detail-row .confidence-label {
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+    margin-left: var(--spacing-sm);
+}
+
+/* Diagnosis Section */
+.diagnosis-section .diagnosis-text {
+    background: var(--gray-100);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+    line-height: 1.6;
+    color: var(--gray-700);
+    white-space: pre-wrap;
+}
+
+/* Feature Summary */
+.feature-summary-section {
+    display: block;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.feature-card {
+    background: var(--gray-100);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+.feature-card .feature-title {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-card .feature-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-card .feature-interpretation {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+    line-height: 1.4;
+}
+
+/* Risk Analysis */
+.risk-analysis-section {
+    display: block;
+}
+
+.risk-category {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+}
+
+.risk-category h4 {
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.risk-category.high-risk {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 4px solid var(--danger);
+}
+
+.risk-category.high-risk h4 {
+    color: var(--danger);
+}
+
+.risk-category.moderate-risk {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 4px solid var(--warning);
+}
+
+.risk-category.moderate-risk h4 {
+    color: var(--warning);
+}
+
+.risk-category.low-risk {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 4px solid var(--success);
+}
+
+.risk-category.low-risk h4 {
+    color: var(--success);
+}
+
+.risk-category ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.risk-category li {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.risk-category li strong {
+    color: var(--dark);
+}
+
+.urgency-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    background: var(--gray-200);
+    color: var(--gray-700);
+    white-space: nowrap;
+}
+
+/* Recommendations */
+.recommendations-section {
+    display: block;
+}
+
+.recommendations-list {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.recommendation-item {
+    background: var(--gray-100);
+    padding: var(--spacing-lg);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    line-height: 1.6;
+    color: var(--gray-700);
+}
+
+.recommendation-item::first-letter {
+    font-size: var(--font-size-lg);
+}
+
+/* Next Steps */
+.next-steps-section {
+    display: block;
+}
+
+.next-steps-list {
+    background: var(--gray-100);
+    padding: var(--spacing-xl);
+    border-radius: 8px;
+    margin: 0;
+    list-style-position: inside;
+}
+
+.next-steps-list li {
+    padding: var(--spacing-md) 0;
+    color: var(--gray-700);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.next-steps-list li:last-child {
+    border-bottom: none;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-2xl);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.loading-spinner::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(99, 102, 241, 0.2);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: var(--spacing-md);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -123,3 +123,28 @@ async function getMetrics() {
         return null;
     }
 }
+
+/**
+ * Get LLM diagnosis insights
+ */
+async function getDiagnosis(features) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/diagnosis`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ features }),
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Diagnosis failed');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Diagnosis error:', error);
+        throw error;
+    }
+}
