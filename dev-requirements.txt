@@ -1,0 +1,10 @@
+# Development and CI tools (kept separate from runtime requirements)
+# Keep versions loose so pip can resolve a compatible set with runtime deps.
+pytest
+pytest-cov
+black
+isort
+flake8
+bandit
+safety
+codecov
