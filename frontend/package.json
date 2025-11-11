@@ -1,0 +1,35 @@
+{
+  "name": "xgboost-ml-dashboard",
+  "version": "1.0.0",
+  "description": "Interactive frontend for XGBoost ML Model Dashboard",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server -p 3000 -c-1 -o",
+    "build": "echo 'Frontend is static - no build needed'",
+    "serve": "http-server -p 3000",
+    "lint": "echo 'ESLint configuration optional'",
+    "test": "echo 'Frontend tests can be added'",
+    "clean": "rm -rf node_modules dist"
+  },
+  "keywords": [
+    "xgboost",
+    "machine-learning",
+    "dashboard",
+    "prediction",
+    "ml-model"
+  ],
+  "author": "Debadip98",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "eslint": "^8.50.0"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

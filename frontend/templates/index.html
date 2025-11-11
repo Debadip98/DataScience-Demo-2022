@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XGBoost ML Model - Prediction Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('serve_static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container-nav">
+            <div class="nav-brand">
+                <i class="bi bi-graph-up"></i>
+                <span>XGBoost ML Dashboard</span>
+            </div>
+            <div class="nav-items">
+                <a href="#home" class="nav-link active" data-section="home">Home</a>
+                <a href="#predict" class="nav-link" data-section="predict">Predict</a>
+                <a href="#analytics" class="nav-link" data-section="analytics">Analytics</a>
+                <a href="#about" class="nav-link" data-section="about">About</a>
+            </div>
+            <div class="nav-status">
+                <span id="status-indicator" class="status-badge loading">Loading...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section / Home -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">XGBoost</span> ML Model
+                    </h1>
+                    <p class="hero-subtitle">Advanced Machine Learning Predictions with XGBoost Algorithm</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="navigateSection('predict')">
+                            <i class="bi bi-play-circle"></i> Make Prediction
+                        </button>
+                        <button class="btn btn-secondary" onclick="navigateSection('analytics')">
+                            <i class="bi bi-bar-chart"></i> View Analytics
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-graphic">
+                        <div class="graphic-circle graphic-1"></div>
+                        <div class="graphic-circle graphic-2"></div>
+                        <div class="graphic-circle graphic-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Advanced Algorithm</h3>
+                        <p>XGBoost Gradient Boosting</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Real-time Predictions</h3>
+                        <p>Instant Results</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>High Accuracy</h3>
+                        <p>Reliable Classifications</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Scalable</h3>
+                        <p>Batch Processing</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Section -->
+        <section id="predict" class="section">
+            <div class="section-header">
+                <h2>Make Prediction</h2>
+                <p>Input features to get predictions from the XGBoost model</p>
+            </div>
+
+            <div class="content-grid">
+                <!-- Input Panel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Input Features</h3>
+                        <button class="btn btn-small btn-secondary" onclick="generateRandomSample()">
+                            <i class="bi bi-arrow-repeat"></i> Random Sample
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="predictionForm">
+                            <div class="features-grid" id="featuresContainer">
+                                <!-- Features will be generated by JS -->
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="bi bi-stars"></i> Get Prediction
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Result Panel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Prediction Result</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="resultContainer" class="result-empty">
+                            <i class="bi bi-info-circle"></i>
+                            <p>Submit features to see predictions</p>
+                        </div>
+                        <div id="resultContent" style="display: none;">
+                            <div class="result-prediction">
+                                <div class="result-item">
+                                    <label>Predicted Class</label>
+                                    <div class="result-value" id="predictionValue">-</div>
+                                </div>
+                                <div class="result-item">
+                                    <label>Confidence</label>
+                                    <div class="confidence-bar">
+                                        <div class="confidence-fill" id="confidenceBar"></div>
+                                    </div>
+                                    <span id="confidencePercent">0%</span>
+                                </div>
+                            </div>
+                            <div class="probability-chart">
+                                <h4>Class Probabilities</h4>
+                                <div class="prob-bars">
+                                    <div class="prob-item">
+                                        <label>Class 0</label>
+                                        <div class="prob-bar">
+                                            <div class="prob-fill" id="prob0"></div>
+                                        </div>
+                                        <span id="prob0-text">0%</span>
+                                    </div>
+                                    <div class="prob-item">
+                                        <label>Class 1</label>
+                                        <div class="prob-bar">
+                                            <div class="prob-fill" id="prob1"></div>
+                                        </div>
+                                        <span id="prob1-text">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="section">
+            <div class="section-header">
+                <h2>Model Analytics</h2>
+                <p>Insights into model performance and feature importance</p>
+            </div>
+
+            <div class="analytics-grid">
+                <!-- Feature Importance -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Top 10 Features by Importance</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="featureImportanceChart"></canvas>
+                        <div id="importanceLoading" class="loading-spinner">
+                            <span>Loading feature importance...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Metrics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Model Performance Metrics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="metrics-grid" id="metricsContainer">
+                            <div class="metric-item">
+                                <label>Accuracy</label>
+                                <div class="metric-value" id="metricAccuracy">-</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>Precision</label>
+                                <div class="metric-value" id="metricPrecision">-</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>Recall</label>
+                                <div class="metric-value" id="metricRecall">-</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>F1-Score</label>
+                                <div class="metric-value" id="metricF1">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Model Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-table">
+                            <div class="info-row">
+                                <span class="info-label">Model Type:</span>
+                                <span class="info-value" id="modelType">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value" id="modelStatus">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Features:</span>
+                                <span class="info-value" id="featureCount">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Algorithm:</span>
+                                <span class="info-value">XGBoost</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Probability Distribution -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Prediction Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2>About This Project</h2>
+                <p>Learn more about the XGBoost ML model and its implementation</p>
+            </div>
+
+            <div class="about-content">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <h3>XGBoost Algorithm</h3>
+                    <p>
+                        XGBoost is an advanced gradient boosting algorithm that builds an ensemble of decision trees
+                        sequentially, with each tree correcting the errors made by the previous ones. This leads to
+                        superior predictive performance and faster training time.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="bi bi-code-square"></i>
+                    </div>
+                    <h3>Technology Stack</h3>
+                    <p>
+                        Built with Python (Flask, XGBoost, scikit-learn) for the backend and HTML5/CSS3/JavaScript
+                        for the frontend. The application includes comprehensive CI/CD pipelines using GitHub Actions
+                        and can be containerized with Docker.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                    <h3>Features</h3>
+                    <p>
+                        Real-time predictions, batch processing, feature importance visualization, model metrics,
+                        interactive dashboards, and RESTful API endpoints for seamless integration with other systems.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="bi bi-rocket"></i>
+                    </div>
+                    <h3>Deployment</h3>
+                    <p>
+                        The application is production-ready with automated testing, code quality checks, security
+                        scanning, and Docker containerization. Deploy on any platform that supports Python and Node.js.
+                    </p>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h3>Project Details</h3>
+                <div class="details-box">
+                    <p>
+                        <strong>GitHub Repository:</strong>
+                        <a href="https://github.com/Debadip98/DataScience-Demo-2022" target="_blank">
+                            DataScience-Demo-2022
+                        </a>
+                    </p>
+                    <p>
+                        <strong>Technologies:</strong> Python, Flask, XGBoost, scikit-learn, HTML5, CSS3, JavaScript,
+                        Node.js, Docker, GitHub Actions
+                    </p>
+                    <p>
+                        <strong>License:</strong> MIT
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 XGBoost ML Dashboard. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#about" class="footer-link">About</a>
+                <a href="https://github.com" class="footer-link" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('serve_static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('serve_static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('serve_static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('serve_static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # XGBoost ML Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xgboost-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - xgboost-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.example.description=XGBoost ML Backend"
+
+  # Frontend Web Server
+  frontend:
+    image: node:18-alpine
+    container_name: xgboost-frontend
+    working_dir: /app
+    command: npm run serve
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    restart: unless-stopped
+    networks:
+      - xgboost-network
+    depends_on:
+      - backend
+    labels:
+      - "com.example.description=XGBoost ML Frontend"
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: xgboost-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    networks:
+      - xgboost-network
+    depends_on:
+      - backend
+      - frontend
+    labels:
+      - "com.example.description=XGBoost Nginx Proxy"
+
+networks:
+  xgboost-network:
+    driver: bridge
+
+volumes:
+  models:
+    driver: local
+  data:
+    driver: local
+  logs:
+    driver: local
