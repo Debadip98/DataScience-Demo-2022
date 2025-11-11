@@ -45,6 +45,10 @@ jobs:
         black --check src/ tests/ app/ 2>/dev/null || echo "Black formatting check completed"
         isort --check-only src/ tests/ app/ 2>/dev/null || echo "Import sorting check completed"
     
+    - name: Ensure Python can import local packages
+      # Ensure the runner adds the repository root to PYTHONPATH so `import src` works during pytest
+      run: echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
+
     - name: Run unit tests
       run: |
         pytest tests/ -v --cov=src --cov=app --cov-report=xml --cov-report=html
