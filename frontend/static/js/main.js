@@ -69,20 +69,38 @@ function initializeFeatureInputs() {
     const container = document.getElementById('featuresContainer');
     if (!container) return;
 
+    // Define feature names for medical diagnosis
+    const featureNames = [
+        'Patient Age',
+        'Tumor Size (mm)',
+        'Cancer Stage',
+        'Genetic Risk Score',
+        'White Blood Cell Count',
+        'Hemoglobin Level',
+        'Platelet Count',
+        'PSA Level (ng/mL)',
+        'Glucose Level (mg/dL)',
+        'BMI'
+    ];
+
     container.innerHTML = '';
     
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.className = 'feature-input';
         div.innerHTML = `
-            <label for="feature_${i}">Feature ${i}</label>
+            <label for="feature_${i}">
+                <span class="feature-name">${featureNames[i]}</span>
+                <span class="feature-code">(feature_${i})</span>
+            </label>
             <input 
                 type="number" 
                 id="feature_${i}" 
                 name="feature_${i}"
                 value="0"
                 step="0.01"
-                placeholder="0.00"
+                placeholder="Enter value"
+                title="${featureNames[i]}"
             >
         `;
         container.appendChild(div);
