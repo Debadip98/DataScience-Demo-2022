@@ -173,6 +173,16 @@ def predict():
             X = pd.DataFrame([features])
             features_dict = {k: float(v) for k, v in features.items()}
         
+        # Augment squared features to match the model's training features
+        try:
+            X_aug = X.copy()
+            for col in X.columns:
+                X_aug[f"{col}_sq"] = X[col] ** 2
+            X = X_aug
+        except Exception:
+            # If augmentation fails, keep original X and allow scaler to raise useful errors
+            pass
+
         # Scale features if needed
         if data_loader and hasattr(data_loader, 'scaler'):
             X_scaled = data_loader.scaler.transform(X)
@@ -227,7 +237,15 @@ def predict_batch():
         
         for record in records:
             X = pd.DataFrame([record], columns=[f'feature_{i}' for i in range(len(record))])
-            
+            # Augment squared features to match training feature set
+            try:
+                X_aug = X.copy()
+                for col in X.columns:
+                    X_aug[f"{col}_sq"] = X[col] ** 2
+                X = X_aug
+            except Exception:
+                pass
+
             if data_loader and hasattr(data_loader, 'scaler'):
                 X_scaled = data_loader.scaler.transform(X)
                 X = pd.DataFrame(X_scaled, columns=X.columns)
@@ -326,6 +344,15 @@ def get_diagnosis():
             features_dict = {k: float(v) for k, v in features.items()}
             X = pd.DataFrame([features_dict])
         
+        # Augment squared features to match model training
+        try:
+            X_aug = X.copy()
+            for col in X.columns:
+                X_aug[f"{col}_sq"] = X[col] ** 2
+            X = X_aug
+        except Exception:
+            pass
+
         # Scale features if needed
         if data_loader and hasattr(data_loader, 'scaler'):
             X_scaled = data_loader.scaler.transform(X)
